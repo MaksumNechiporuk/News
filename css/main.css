@@ -10,7 +10,7 @@ body {
   font-family: Arial, Helvetica;
 }
 .News {
-  align-items: flex-start;
+  align-items: center;
   margin-top: 15px;
 }
 .big {
@@ -27,12 +27,14 @@ body {
   height: auto;
 }
 .blockNews {
+  z-index: 0;
+  text-align: justify;
   border: 2px solid white;
   padding: 10px;
   margin: 10px;
-  display: inline-block;
-  width: 800px;
-  height: auto;
+  width: 350px;
+  height: 300px;
+  overflow: hidden;
 }
 .custom-dropdown select {
   background-color: #1abc9c;
@@ -177,7 +179,6 @@ body {
 :-ms-input-placeholder {
   color: #c9c9c9;
 }
-/* ---------------------------------------- */
 legend {
   margin-bottom: 1rem;
   font-size: 1em;
@@ -310,7 +311,6 @@ button:not(#back):hover {
 
 .city-search {
   width: 100%;
-
 }
 
 .form-field input {
@@ -470,4 +470,23 @@ label[for="celsius"]::before {
 p,
 b {
   color: black;
+}
+
+.grid {
+  background: #eee;
+  max-width: 1200px;
+}
+
+.grid:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.grid-item {
+  float: left;
+  border-radius: 10px;
+}
+.searchForm {
+  margin-top: 1000px;
 }

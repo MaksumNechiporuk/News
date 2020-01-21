@@ -94,7 +94,7 @@ async function ShowNews(data) {
     url.href = data.articles[i].url;
     let divInformation = document.createElement("div");
 
-    divInformation.setAttribute("class", "blockNews row");
+    divInformation.setAttribute("class", "blockNews grid-item");
     if (data.articles[i].urlToImage) src = data.articles[i].urlToImage;
     else src = "https://pokrovsk.news/i/news.svg";
 
@@ -328,7 +328,6 @@ function weatherReport(latitude, longitude) {
         tempMax = Math.round(tempMax);
       }
 
-      // Append Markup for each Forecast of the 7 day week
       $("#forecast").append(
         '<li class="shade-' +
           skicons +
@@ -350,36 +349,6 @@ function weatherReport(latitude, longitude) {
           "</p>" +
           "</div></div>"
       );
-      // $("#forecast").append(
-      //   '<li class="shade-' +
-      //     skicons +
-      //     '"><div class="card-container"><div><div class="front card"><div>' +
-      //     "<div class='graphic'><canvas class=" +
-      //     skicons +
-      //     "></canvas></div>" +
-      //     "<div><b>Day</b>: " +
-      //     date.toLocaleDateString() +
-      //     "</div>" +
-      //     "<div><b>Temperature</b>: " +
-      //     temp +
-      //     "</div>" +
-      //     "<div><b>Max Temp.</b>: " +
-      //     tempMax +
-      //     "</div>" +
-      //     "<div><b>Humidity</b>: " +
-      //     humidity +
-      //     "</div>" +
-      //     '<p class="summary">' +
-      //     summary +
-      //     "</p>" +
-      //     '</div></div><div class="back card">' +
-      //     '<div class="hourly' +
-      //     " " +
-      //     day +
-      //     '"><b>24hr Forecast</b><ul class="list-reset"></ul></div></div></div></div></li>'
-      // );
-
-      // Daily forecast report for each day of the week
       switch (day) {
         case "Sunday":
           hourlyReport(sunday, days[0]);
@@ -464,3 +433,7 @@ async function initGoogleAPI() {
 }
 
 insertGoogleScript();
+$(".grid").masonry({
+  itemSelector: ".grid-item",
+  columnWidth: 160
+});
