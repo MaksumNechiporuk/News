@@ -282,16 +282,16 @@ button:not(#back):hover {
 }
 .marvel-device .screen {
   height: auto;
-  width: 800px;
+  width: 1000px;
   text-align: left;
   background: #002b36;
 }
 .screen {
   height: auto;
-  width: 800px;
+  width: 1000px;
   display: inline-block;
   text-align: left;
-  background: #002b36;
+  /* background: #002b36; */
 }
 #logo {
   -webkit-filter: invert(50%);
@@ -402,6 +402,8 @@ button:not(#back):hover {
   margin: 1rem 0.5rem;
   padding: 0.5rem;
   background: #114856;
+  width: 300px;
+  overflow: hidden;
 }
 
 .card {
@@ -472,10 +474,7 @@ b {
   color: black;
 }
 
-.grid {
-  background: #eee;
-  max-width: 1200px;
-}
+
 
 .grid:after {
   content: "";

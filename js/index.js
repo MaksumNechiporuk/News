@@ -327,9 +327,9 @@ function weatherReport(latitude, longitude) {
         temp = Math.round(temp);
         tempMax = Math.round(tempMax);
       }
-
+      $("#forecast").addClass("grid");
       $("#forecast").append(
-        '<li class="shade-' +
+        '<li class=" grid-item shade-' +
           skicons +
           '"><div class="card-container"><div><div class="front card"><div>' +
           "<div><b>Day</b>: " +
