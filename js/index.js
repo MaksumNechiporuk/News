@@ -69,16 +69,8 @@ async function changeCountry() {
 }
 async function Request(country, category, callback) {
   Preloader();
-  let localStr = false;
+
   const URL = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=93395f34a1bd41ea945fea1ef380ff4c`;
-
-  let data = JSON.parse(localStorage.getItem(URL));
-  if (data === null) localStr = true;
-  else {
-    callback(data);
-    return;
-  }
-
   await fetch(URL, {
     method: "GET"
   })
@@ -88,9 +80,6 @@ async function Request(country, category, callback) {
     .then(data => {
       callback(data);
       console.log(URL);
-      if (localStr) {
-        localStorage.setItem(URL, JSON.stringify(data));
-      }
     })
     .catch(err => {
       console.log("Catch => ", err);
@@ -159,13 +148,11 @@ items.forEach((item, index) => {
   item.classList.contains("is-active") && handleIndicator(item);
 });
 function Preloader() {
-  let pr = document.querySelector(".load");
-  if (pr == null) {
-    let preloader = document.createElement("div");
-    preloader.innerHTML = " <hr/><hr/><hr/><hr/>";
-    preloader.setAttribute("class", "load");
-    blockNews.append(preloader);
-  }
+  let preloader = document.createElement("div");
+  preloader.innerHTML = " <hr/><hr/><hr/><hr/>";
+  preloader.setAttribute("class", "load");
+  blockNews.append(preloader);
+  console.log("load");
 }
 
 function staggerFade() {
@@ -266,8 +253,8 @@ function weatherReport(latitude, longitude) {
       temp = Math.round(temp);
       tempMax = Math.round(tempMax);
 
-      $("#forecast").addClass("grid");
-      $("#forecast").append(
+      $(".forecast").addClass("grid");
+      $(".forecast").append(
         '<li class=" grid-item shade-' +
           skicons +
           '"><div class="card-container"><div><div class="front card"><div>' +
@@ -336,7 +323,7 @@ async function start(lat, long) {
       $(".screen").append(
         '<h3 class="city">' +
           city_name +
-          '</h3><ul class="list-reset fadein-stagger" id="forecast"></ul>'
+          '</h3><ul class="list-reset fadein-stagger forecast" ></ul>'
       );
     });
   }
