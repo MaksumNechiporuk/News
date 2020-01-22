@@ -69,9 +69,16 @@ async function changeCountry() {
 }
 async function Request(country, category, callback) {
   Preloader();
-
+  let localStr = false;
   const URL = `https://newsapi.org/v2/top-headlines?country=${country}&category=${category}&apiKey=93395f34a1bd41ea945fea1ef380ff4c`;
-  console.log(URL);
+
+  let data = JSON.parse(localStorage.getItem(URL));
+  if (data === null) localStr = true;
+  else {
+    callback(data);
+    return;
+  }
+
   await fetch(URL, {
     method: "GET"
   })
@@ -80,6 +87,10 @@ async function Request(country, category, callback) {
     })
     .then(data => {
       callback(data);
+      console.log(URL);
+      if (localStr) {
+        localStorage.setItem(URL, JSON.stringify(data));
+      }
     })
     .catch(err => {
       console.log("Catch => ", err);
@@ -96,7 +107,6 @@ async function ShowNews(data) {
 
     divInformation.setAttribute("class", "blockNews grid-item");
     if (data.articles[i].urlToImage) src = data.articles[i].urlToImage;
-    else src = "https://pokrovsk.news/i/news.svg";
 
     let img = document.createElement("img");
     img.src = src;
@@ -105,7 +115,6 @@ async function ShowNews(data) {
     img.onerror = function() {
       this.src = "https://pokrovsk.news/i/news.svg";
     };
-
     divInformation.appendChild(img);
     let desc = document.createElement("div");
     desc.className = "newsArticle";
@@ -167,48 +176,6 @@ function staggerFade() {
   }, 30);
 }
 
-function skycons() {
-  var i,
-    icons = new Skycons({
-      color: "#FFFFFF",
-      resizeClear: true // nasty android hack
-    }),
-    list = [
-      // listing of all possible icons
-      "clear-day",
-      "clear-night",
-      "partly-cloudy-day",
-      "partly-cloudy-night",
-      "cloudy",
-      "rain",
-      "sleet",
-      "snow",
-      "wind",
-      "fog"
-    ];
-
-  // loop thru icon list array
-  for (i = list.length; i--; ) {
-    var weatherType = list[i], // select each icon from list array
-      // icons will have the name in the array above attached to the
-      // canvas element as a class so let's hook into them.
-      elements = document.getElementsByClassName(weatherType);
-
-    // loop thru the elements now and set them up
-    for (e = elements.length; e--; ) {
-      icons.set(elements[e], weatherType);
-    }
-  }
-
-  // animate the icons
-  icons.play();
-}
-
-// =================================================
-// Temperature Converter
-// =================================================
-
-// convert degrees to celsius
 function fToC(fahrenheit) {
   var fTemp = fahrenheit,
     fToCel = ((fTemp - 32) * 5) / 9;
@@ -216,14 +183,7 @@ function fToC(fahrenheit) {
   return fToCel;
 }
 
-// =================================================
-// Weather Reporter
-// =================================================
-
 function weatherReport(latitude, longitude) {
-  // variables config for coordinates, url and api key
-  // latitude and longitude are accepted arguments and passed
-  // once a user has submitted the form.
   var apiKey = "2c1cd940ef8b447e75c73cd627e5159d",
     url = "https://api.darksky.net/forecast/",
     lati = latitude,
@@ -231,7 +191,6 @@ function weatherReport(latitude, longitude) {
     api_call =
       url + apiKey + "/" + lati + "," + longi + "?extend=hourly&callback=?";
 
-  // Hold our days of the week for reference later.
   var days = [
     "Sunday",
     "Monday",
@@ -242,8 +201,6 @@ function weatherReport(latitude, longitude) {
     "Saturday"
   ];
 
-  // Hold hourly values for each day of the week.
-  // This will store our 24 hour forecast results.
   var sunday = [],
     monday = [],
     tuesday = [],
@@ -251,11 +208,6 @@ function weatherReport(latitude, longitude) {
     thursday = [],
     friday = [],
     saturday = [];
-
-  // Celsius button check. Is it toggled or not?
-  var isCelsiusChecked = true;
-
-  // Hourly report method to reference in our daily loop
   function hourlyReport(day, selector) {
     for (var i = 0, l = day.length; i < l; i++) {
       $("." + selector + " " + "ul").append(
@@ -263,23 +215,15 @@ function weatherReport(latitude, longitude) {
       );
     }
   }
-
-  // Call to the DarkSky API to retrieve JSON
   $.getJSON(api_call, function(forecast) {
-    // Loop thru hourly forecasts
     for (var j = 0, k = forecast.hourly.data.length; j < k; j++) {
       var hourly_date = new Date(forecast.hourly.data[j].time * 1000),
         hourly_day = days[hourly_date.getDay()],
         hourly_temp = forecast.hourly.data[j].temperature;
 
-      // If Celsius is checked then convert degrees to celsius
-      // for general forecast report.
-      if (isCelsiusChecked) {
-        hourly_temp = fToC(hourly_temp);
-        hourly_temp = Math.round(hourly_temp);
-      }
+      hourly_temp = fToC(hourly_temp);
+      hourly_temp = Math.round(hourly_temp);
 
-      // push 24 hour forecast values to our empty days array
       switch (hourly_day) {
         case "Sunday":
           sunday.push(hourly_temp);
@@ -308,7 +252,6 @@ function weatherReport(latitude, longitude) {
       }
     }
 
-    // Loop thru daily forecasts
     for (var i = 0, l = forecast.daily.data.length; i < l - 1; i++) {
       var date = new Date(forecast.daily.data[i].time * 1000),
         day = days[date.getDay()],
@@ -318,15 +261,11 @@ function weatherReport(latitude, longitude) {
         summary = forecast.daily.data[i].summary,
         temp = Math.round(forecast.hourly.data[i].temperature),
         tempMax = Math.round(forecast.daily.data[i].temperatureMax);
+      temp = fToC(temp);
+      tempMax = fToC(tempMax);
+      temp = Math.round(temp);
+      tempMax = Math.round(tempMax);
 
-      // If Celsius is checked then convert degrees to celsius
-      // for 24 hour forecast results
-      if (isCelsiusChecked) {
-        temp = fToC(temp);
-        tempMax = fToC(tempMax);
-        temp = Math.round(temp);
-        tempMax = Math.round(tempMax);
-      }
       $("#forecast").addClass("grid");
       $("#forecast").append(
         '<li class=" grid-item shade-' +
@@ -374,7 +313,6 @@ function weatherReport(latitude, longitude) {
       }
     }
 
-    skycons();
     staggerFade();
   });
 }
@@ -418,7 +356,6 @@ function insertGoogleScript() {
   document.body.appendChild(google_api);
 }
 
-// SearchBox Method
 async function initGoogleAPI() {
   var autocomplete = new google.maps.places.SearchBox(
     document.querySelector(".city-search")
