@@ -206,18 +206,18 @@ button:not(#back):hover {
   margin: 0 0 0.875rem;
   margin-left: 10px;
 }
-.screen {
+.Weather {
   height: auto;
   width: 1000px;
   display: inline-block;
   text-align: left;
 }
-.form {
+.formWeather {
   padding: 1rem;
   width: 100%;
   color: black;
 }
-.form ul {
+.formWeather ul {
   overflow: auto;
 }
 
@@ -283,13 +283,11 @@ p,
 b {
   color: black;
 }
-
 .grid:after {
   content: "";
   display: block;
   clear: both;
 }
-
 .grid-item {
   float: left;
   border-radius: 10px;

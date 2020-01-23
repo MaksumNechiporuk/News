@@ -9,6 +9,9 @@ let Science = document.querySelector(".Science");
 let Sports = document.querySelector(".Sports");
 let Technology = document.querySelector(".Technology");
 let btnSearch = document.querySelector(".btn");
+let Lat = 50.6199,
+  Lng = 26.251617;
+
 Business.value = "business";
 Entertainment.value = "entertainment";
 Health.value = "health";
@@ -54,7 +57,7 @@ function fillSelect() {
     }
   ];
 
-  Array.from(countries).map(country => {
+  countries.map(country => {
     Country.options.add(new Option(country.country, country.value));
   });
   Country.addEventListener("change", changeCountry);
@@ -63,7 +66,7 @@ function changeCategory() {
   curentCategory = this.value;
   Request(curentCountry, curentCategory, ShowNews);
 }
-async function changeCountry() {
+function changeCountry() {
   curentCountry = this.value;
   Request(curentCountry, curentCategory, ShowNews);
 }
@@ -92,6 +95,7 @@ async function ShowNews(data) {
   for (let i = 0; i < data.totalResults; i++) {
     let url = document.createElement("a");
     url.href = data.articles[i].url;
+    url.setAttribute("target", "_blank");
     let divInformation = document.createElement("div");
 
     divInformation.setAttribute("class", "blockNews grid-item");
@@ -299,37 +303,37 @@ function weatherReport(latitude, longitude) {
           break;
       }
     }
-
     staggerFade();
   });
 }
 
 function RemoveChildrenWeather() {
-  let Weather = document.querySelector(".screen");
+  let Weather = document.querySelector(".Weather");
   if (Weather.children.length === 1) return;
-  console.log(Weather.lastChild);
-  if (Weather.lastChild.className != "form")
-    Weather.removeChild(Weather.lastChild);
+  Weather.removeChild(Weather.lastChild);
   RemoveChildrenWeather();
 }
 
-async function start(lat, long) {
+async function startWeather(lat, long) {
   await RemoveChildrenWeather();
 
   let city_name = document.querySelector(".city-search").value;
-  if (lat && long !== "") {
-    $(".form").fadeOut(100, function() {
+  if (lat && long != "") {
+    $(".formWeather").fadeOut(100, function() {
       weatherReport(lat, long);
-      $(".screen").append(
+      $(".Weather").append(
         '<h3 class="city">' +
           city_name +
           '</h3><ul class="list-reset fadein-stagger forecast" ></ul>'
       );
     });
+    (Lat = ""), (Lng = "");
+  } else {
+    $(".Weather").append(
+      '<h3 class="city">Not found</h3><ul class="list-reset fadein-stagger forecast" ></ul>'
+    );
   }
 }
-let lat = 50.6199,
-  lng = 26.251617;
 
 function insertGoogleScript() {
   let map = document.querySelector(".map");
@@ -347,13 +351,12 @@ async function initGoogleAPI() {
   var autocomplete = new google.maps.places.SearchBox(
     document.querySelector(".city-search")
   );
-  console.log("Map");
   autocomplete.addListener("places_changed", function() {
     var place = autocomplete.getPlaces()[0];
-    lat = place.geometry.location.lat();
-    lng = place.geometry.location.lng();
+    Lat = place.geometry.location.lat();
+    Lng = place.geometry.location.lng();
   });
-  start(lat, lng);
+  startWeather(Lat, Lng);
 }
 
 insertGoogleScript();
